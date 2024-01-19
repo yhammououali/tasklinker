@@ -10,7 +10,7 @@
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% block stylesheets %}{% endblock %}
 </head>
-<body>
+<body data-turbo="false">
 <div id="main-container">
     {{ include('partials/navigation.html.twig') }}
 
@@ -28,10 +28,6 @@
     </main>
 </div>
 
-{% block javascripts %}
-    {% block importmap %}
-        {{ importmap('app') }}
-    {% endblock %}
-{% endblock %}
+{% block javascripts %}{% endblock %}
 </body>
 </html>

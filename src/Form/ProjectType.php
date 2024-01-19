@@ -19,12 +19,14 @@ class ProjectType extends AbstractType
             ->add('title', TextType::class)
             ->add('members', EntityType::class, [
                 'class' => Member::class,
-                'choice_label' => 'id',
+                'choice_label' => function (Member $member) {
+                    return $member->getFirstName() . ' ' . $member->getLastName();
+                },
                 'multiple' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Créer le projet',
-                'row_attr' => [
+                'attr' => [
                     'class' => 'button button-submit',
                 ]
             ])
