@@ -23,7 +23,7 @@ class ProjectController extends AbstractController
             'Project 4',
         ]; */
 
-        $projects = $projectRepository->findAll();
+        $projects = $projectRepository->findByActive();
 
         return $this->render('project/list.html.twig', [
             'pageName' => 'Liste des projets',
@@ -56,5 +56,30 @@ class ProjectController extends AbstractController
         return $this->render('project/create.html.twig', [
             'pageName' => 'Créer un projet',
         ]);
+    }
+
+    #[Route('/project/{id}/update', name: 'tasklinker_project_update', methods: ['GET', 'POST'])]
+    public function update(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ProjectType::class, $project);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+        }
+
+        return $this->render('project/create.html.twig', [
+            'pageName' => sprintf('Mis à jour du projet [%s]', $project->getTitle()),
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/project/{id}/delete', name: 'tasklinker_project_delete', methods: ['GET'])]
+    public function delete(Project $project, EntityManagerInterface $entityManager): Response
+    {
+        $project->setDeletedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+
+        return $this->redirectToRoute('tasklinker_project_list');
     }
 }
